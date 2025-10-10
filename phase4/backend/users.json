@@ -1,0 +1,12 @@
+[
+  {
+    "email": "sunil1912@gmail.com",
+    "password": "$2b$10$yWxAYRfN7x.RwCPHtf/NtuqSdwMO0rXM.qmgPf6pXETQK1JNxydfO",
+    "role": "user"
+  },
+  {
+    "email": "ss3541912@gmail.com",
+    "password": "$2b$10$1j8ya/MNKko7fI0HBuuRNezM4qQ3vhFXHbc0RW1OerX6XebE1esSq",
+    "role": "user"
+  }
+]

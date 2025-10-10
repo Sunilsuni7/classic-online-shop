@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1760077669461,
+    "items": [
+      {
+        "id": 1,
+        "name": "Wireless Headphones",
+        "price": 699
+      }
+    ],
+    "customer": {
+      "name": "Sunil S",
+      "email": "sunil1912@gmail.com",
+      "phone": "9480245680",
+      "address": "Benagluru"
+    },
+    "createdAt": "10/10/2025, 11:57:49 am"
+  }
+]
