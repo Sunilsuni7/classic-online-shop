@@ -1,0 +1,12 @@
+{
+  "name": "classic-online-shop-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Classic Online Shop - Multi-phase e-commerce platform",
+  "scripts": {
+    "dev": "npm --prefix phase4/frontend run dev",
+    "build": "npm --prefix phase4/frontend run build",
+    "preview": "npm --prefix phase4/frontend run preview",
+    "backend": "npm --prefix phase4/backend start"
+  }
+}

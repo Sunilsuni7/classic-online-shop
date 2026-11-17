@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd phase4/frontend && npm install && npm run build",
+  "outputDirectory": "phase4/frontend/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

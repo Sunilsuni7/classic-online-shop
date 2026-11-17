@@ -1,81 +1,197 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/classicshop-logo.jpg";
 
-const Navbar = ({ cartCount, token, setToken }) => {
+const Navbar = ({ cartCount = 0, token, setToken }) => {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove JWT
-    setToken(""); // Update App state
-    navigate("/login"); // Redirect to login
+    localStorage.removeItem("token");
+    if (typeof setToken === "function") {
+      setToken("");
+    }
+    navigate("/login");
   };
 
   return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "10px 20px",
-        backgroundColor: "#1976d2",
-        color: "#fff",
-      }}
-    >
-      {/* Logo */}
-      <Link to="/" className="logo">
-        <img src={logo} alt="Classic Shop Logo" height="50" />
-      </Link>
+    <header style={{ position: "sticky", top: 0, zIndex: 1000, width: "100%" }}>
+      <nav
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "12px 24px",
+          backgroundColor: "#1976d2",
+          color: "#fff",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+        }}
+      >
+        {/* Brand / Logo */}
+        <Link
+          to="/"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            textDecoration: "none",
+            color: "#fff",
+          }}
+        >
+          <img
+            src={logo}
+            alt="Classic Shop Logo"
+            height="44"
+            style={{ borderRadius: "8px", objectFit: "contain", background: "#fff", padding: "2px" }}
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
+          />
+          <span style={{ fontSize: "20px", fontWeight: "bold", letterSpacing: "0.5px" }}>
+            Classic Shop
+          </span>
+        </Link>
 
-      {/* Navigation links */}
-      <ul style={{ display: "flex", listStyle: "none", gap: "20px", margin: 0 }}>
-        <li>
-          <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>Home</Link>
-        </li>
-        <li>
-          <Link to="/products" style={{ color: "#fff", textDecoration: "none" }}>Products</Link>
-        </li>
-        <li>
-          <Link to="/cart" style={{ color: "#fff", textDecoration: "none" }}>
-            Cart ({cartCount})
-          </Link>
-        </li>
+        {/* Mobile menu toggle button */}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="mobile-menu-btn"
+          style={{
+            background: "none",
+            border: "none",
+            color: "#fff",
+            fontSize: "24px",
+            cursor: "pointer",
+            padding: "4px 8px",
+          }}
+          aria-label="Toggle navigation menu"
+        >
+          ☰
+        </button>
 
-        {/* Conditional links */}
-        {!token ? (
-          <>
-            <li>
-              <Link to="/register" style={{ color: "#fff", textDecoration: "none" }}>
-                Register
-              </Link>
-            </li>
-            <li>
-              <Link to="/login" style={{ color: "#fff", textDecoration: "none" }}>
-                Login
-              </Link>
-            </li>
-          </>
-        ) : (
+        {/* Desktop & Open Mobile Navigation */}
+        <ul
+          className={`nav-links ${mobileMenuOpen ? "nav-open" : ""}`}
+          style={{
+            listStyle: "none",
+            margin: 0,
+            padding: 0,
+            alignItems: "center",
+            gap: "20px",
+          }}
+        >
           <li>
-            <button
-              onClick={handleLogout}
+            <Link
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
+              style={styles.navLink}
+            >
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/products"
+              onClick={() => setMobileMenuOpen(false)}
+              style={styles.navLink}
+            >
+              Products
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/cart"
+              onClick={() => setMobileMenuOpen(false)}
               style={{
-                backgroundColor: "#f44336",
-                border: "none",
-                padding: "8px 12px",
-                color: "#fff",
-                borderRadius: "5px",
-                cursor: "pointer",
+                ...styles.navLink,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
               }}
             >
-              Logout
-            </button>
+              <span>Cart</span>
+              <span
+                style={{
+                  backgroundColor: "#ff9800",
+                  color: "#fff",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  padding: "2px 8px",
+                  borderRadius: "12px",
+                  minWidth: "20px",
+                  textAlign: "center",
+                }}
+              >
+                {cartCount}
+              </span>
+            </Link>
           </li>
-        )}
-      </ul>
-    </nav>
+
+          {!token ? (
+            <>
+              <li>
+                <Link
+                  to="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={styles.navLink}
+                >
+                  Register
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    ...styles.navLink,
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    padding: "6px 14px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  Login
+                </Link>
+              </li>
+            </>
+          ) : (
+            <li>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleLogout();
+                }}
+                style={{
+                  backgroundColor: "#d32f2f",
+                  border: "none",
+                  padding: "8px 14px",
+                  color: "#fff",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                  fontSize: "14px",
+                }}
+              >
+                Logout
+              </button>
+            </li>
+          )}
+        </ul>
+      </nav>
+    </header>
   );
+};
+
+const styles = {
+  navLink: {
+    color: "#fff",
+    textDecoration: "none",
+    fontWeight: "500",
+    fontSize: "15px",
+    transition: "opacity 0.2s ease",
+  },
 };
 
 export default Navbar;

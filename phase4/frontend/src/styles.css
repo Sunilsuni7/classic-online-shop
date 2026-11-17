@@ -14,7 +14,7 @@ html, body, #root {
   scroll-behavior: smooth;
 
   /* Full-page background image */
-  background: url("image1.jpg") no-repeat center center fixed;
+  background: url("/image1.jpg") no-repeat center center fixed;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -214,8 +214,8 @@ body::before {
 }
 
 .card button {
-  background: linear-gradient(135deg, #5f8aff90, #fe7bca);
-  color: rgba(33, 11, 231, 0.283);
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: #ffffff;
   border: none;
   padding: 12px 26px;
   border-radius: 12px;
@@ -540,4 +540,67 @@ body::before {
 .error {
   color: red;
   font-size: 14px;
+}
+
+/* ================= RESPONSIVE STYLES ================= */
+.mobile-menu-btn {
+  display: none !important;
+}
+
+.nav-links {
+  display: flex !important;
+  flex-direction: row;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block !important;
+  }
+
+  .nav-links {
+    display: none !important;
+  }
+
+  .nav-links.nav-open {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #1565c0;
+    padding: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    gap: 16px;
+    align-items: center;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    padding: 0 15px 40px;
+    gap: 15px;
+  }
+
+  .cart-page {
+    margin: 20px 10px;
+    padding: 20px 15px;
+  }
+
+  .cart-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cart-card img {
+    width: 140px;
+    height: 140px;
+  }
+
+  .cart-summary {
+    text-align: center;
+  }
+
+  .cart-summary div {
+    justify-content: center !important;
+  }
 }

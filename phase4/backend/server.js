@@ -21,7 +21,7 @@ let products = [
   { id: 7, name: "Smartphone", description: "Latest 5G smartphone with AMOLED display and 128GB storage.", price: 15999, image: "Smartphone.jpg" },
   { id: 8, name: "Tablet", description: "Lightweight tablet with 10-inch display, ideal for reading and movies.", price: 12999, image: "Tablet.jpg" },
   { id: 9, name: "Gaming Keyboard", description: "Mechanical gaming keyboard with RGB backlight and fast response keys.", price: 2999, image: "Gaming Keyboard.jpg" },
-  { id: 10, name: "Drone", description: "Quadcopter drone with HD camera and 30 minutes flight time.", price: 8999, image: "Drone.jpeg" },
+  { id: 10, name: "Drone", description: "Quadcopter drone with HD camera and 30 minutes flight time.", price: 8999, image: "Drone.jpg" },
   { id: 11, name: "Smart TV", description: "50-inch 4K Ultra HD Smart TV with built-in streaming apps.", price: 35999, image: "Smart TV.jpg" },
   { id: 12, name: "Power Bank", description: "10000mAh fast-charging power bank with dual USB ports.", price: 1499, image: "Power Bank.jpg" },
   { id: 13, name: "Wireless Charger", description: "Fast wireless charging pad compatible with all Qi-enabled devices.", price: 1299, image: "Wireless Charger.jpg" },
@@ -138,8 +138,12 @@ app.post("/orders", (req, res) => {
   res.status(201).json({ message: "✅ Order submitted successfully!", order: newOrder });
 });
 
-// Show orders as HTML
+// Show orders as HTML (or JSON if requested)
 app.get("/orders", (req, res) => {
+  if (req.headers.accept?.includes("application/json") || req.query.json === "true") {
+    return res.json(orders);
+  }
+
   if (orders.length === 0) return res.send("<h2>No orders found yet 🚀</h2>");
 
   let html = "<h2>🧾 Orders List</h2><ul style='list-style:none;padding:0'>";

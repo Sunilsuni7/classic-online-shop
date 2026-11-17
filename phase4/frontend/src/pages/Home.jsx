@@ -5,7 +5,7 @@ function Home() {
   return (
     <div className="home">
       <h1>Welcome to ClassicShop</h1>
-      <p>“Smart gadgets, smarter shopping – all in one place</p>
+      <p>“Smart gadgets, smarter shopping — all in one place”</p>
       <Link to="/products">
         <button className="shop-btn">Shop Now</button>
       </Link>
