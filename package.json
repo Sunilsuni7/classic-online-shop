@@ -5,7 +5,8 @@
   "description": "Classic Online Shop - Multi-phase e-commerce platform",
   "scripts": {
     "dev": "npm --prefix phase4/frontend run dev",
-    "build": "npm --prefix phase4/frontend run build",
+    "install": "cd phase4/frontend && npm install",
+    "build": "cd phase4/frontend && npm install && npm run build",
     "preview": "npm --prefix phase4/frontend run preview",
     "backend": "npm --prefix phase4/backend start"
   }
