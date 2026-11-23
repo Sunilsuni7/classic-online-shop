@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 
 const Login = ({ setToken }) => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -28,7 +29,7 @@ const Login = ({ setToken }) => {
     setMessage("");
 
     try {
-      const res = await axios.post("http://localhost:5000/login", form, { timeout: 3000 });
+      const res = await axios.post(`${API_BASE_URL}/login`, form, { timeout: 3000 });
       completeLogin(res.data.token, res.data.message || "Login successful!");
     } catch (err) {
       if (err.response?.data?.error) {

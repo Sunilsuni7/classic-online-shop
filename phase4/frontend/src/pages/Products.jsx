@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import fallbackProducts from "../data/products";
+import { API_BASE_URL } from "../config/api";
 
 // Helper to determine product category
 const getCategory = (product) => {
@@ -36,7 +37,7 @@ const Products = ({ addToCart }) => {
   useEffect(() => {
     let isMounted = true;
     axios
-      .get("http://localhost:5000/products", { timeout: 3000 })
+      .get(`${API_BASE_URL}/products`, { timeout: 3000 })
       .then((res) => {
         if (isMounted && Array.isArray(res.data) && res.data.length > 0) {
           setProducts(res.data);

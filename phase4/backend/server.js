@@ -10,6 +10,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Handle /api prefix transparently when hosted on Vercel Serverless or proxy
+app.use((req, res, next) => {
+  if (req.url.startsWith("/api")) {
+    req.url = req.url.replace(/^\/api/, "") || "/";
+  }
+  next();
+});
+
 // ================= PRODUCTS ================= //
 let products = [
   { id: 1, name: "Wireless Headphones", description: "High-quality wireless headphones with noise cancellation and long battery life.", price: 699, image: "Wireless Headphones.jpg" },
@@ -31,34 +39,79 @@ let products = [
 // ================= USERS ================= //
 const usersFile = path.join(__dirname, "users.json");
 
-// Ensure users.json exists
-if (!fs.existsSync(usersFile)) {
-  fs.writeFileSync(usersFile, "[]", "utf8");
-  console.log("🆕 Created new users.json file");
+let memoryUsers = [
+  {
+    email: "sunil1912@gmail.com",
+    password: "$2b$10$yWxAYRfN7x.RwCPHtf/NtuqSdwMO0rXM.qmgPf6pXETQK1JNxydfO",
+    role: "user"
+  },
+  {
+    email: "ss3541912@gmail.com",
+    password: "$2b$10$1j8ya/MNKko7fI0HBuuRNezM4qQ3vhFXHbc0RW1OerX6XebE1esSq",
+    role: "user"
+  }
+];
+
+if (fs.existsSync(usersFile)) {
+  try {
+    memoryUsers = JSON.parse(fs.readFileSync(usersFile, "utf8"));
+  } catch (e) {
+    console.error("Error reading users.json:", e);
+  }
+} else {
+  try {
+    fs.writeFileSync(usersFile, JSON.stringify(memoryUsers, null, 2), "utf8");
+    console.log("🆕 Created new users.json file");
+  } catch (e) {
+    console.warn("Read-only filesystem detected, using in-memory users.");
+  }
 }
 
 // Helper functions
 function loadUsers() {
-  return JSON.parse(fs.readFileSync(usersFile, "utf8"));
+  if (fs.existsSync(usersFile)) {
+    try {
+      return JSON.parse(fs.readFileSync(usersFile, "utf8"));
+    } catch (e) {}
+  }
+  return memoryUsers;
 }
 
 function saveUsers(users) {
-  fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), "utf8");
+  memoryUsers = users;
+  try {
+    fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), "utf8");
+  } catch (e) {
+    console.warn("Read-only filesystem, updated in-memory users.");
+  }
 }
 
 // ================= ORDERS ================= //
 const ordersFile = path.join(__dirname, "orders.json");
 
-if (!fs.existsSync(ordersFile)) {
-  fs.writeFileSync(ordersFile, "[]", "utf8");
-  console.log("🆕 Created new orders.json file");
+let orders = [];
+if (fs.existsSync(ordersFile)) {
+  try {
+    orders = JSON.parse(fs.readFileSync(ordersFile, "utf8"));
+  } catch (e) {
+    orders = [];
+  }
+} else {
+  try {
+    fs.writeFileSync(ordersFile, "[]", "utf8");
+    console.log("🆕 Created new orders.json file");
+  } catch (e) {
+    console.warn("Read-only filesystem detected, using in-memory orders.");
+  }
 }
 
-let orders = JSON.parse(fs.readFileSync(ordersFile, "utf8"));
-
 function saveOrders() {
-  fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2), "utf8");
-  console.log("💾 Orders saved to file");
+  try {
+    fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2), "utf8");
+    console.log("💾 Orders saved to file");
+  } catch (e) {
+    console.warn("Read-only filesystem, orders kept in memory.");
+  }
 }
 
 // ================= AUTH ROUTES ================= //
@@ -97,7 +150,11 @@ app.post("/login", async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
   if (!match) return res.status(400).json({ error: "Incorrect password" });
 
-  const token = jwt.sign({ email: user.email, role: user.role }, "SECRET_KEY", { expiresIn: "1h" });
+  const token = jwt.sign(
+    { email: user.email, role: user.role },
+    process.env.JWT_SECRET || "SECRET_KEY",
+    { expiresIn: "1h" }
+  );
   res.json({ message: "✅ Login successful!", token });
 });
 
@@ -168,7 +225,12 @@ app.get("/orders/json", (req, res) => {
 });
 
 // ================= START SERVER ================= //
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`✅ Server running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

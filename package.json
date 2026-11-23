@@ -5,9 +5,16 @@
   "description": "Classic Online Shop - Multi-phase e-commerce platform",
   "scripts": {
     "dev": "npm --prefix phase4/frontend run dev",
-    "install": "cd phase4/frontend && npm install",
-    "build": "cd phase4/frontend && npm install && npm run build",
-    "preview": "npm --prefix phase4/frontend run preview",
+    "build": "node scripts/build-all.js",
+    "preview": "npx vite preview --outDir dist",
     "backend": "npm --prefix phase4/backend start"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "validator": "^13.15.15"
   }
 }

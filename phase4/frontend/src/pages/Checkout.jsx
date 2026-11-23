@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 
 const Checkout = ({ cart = [], clearCart }) => {
   const navigate = useNavigate();
@@ -76,7 +77,7 @@ const Checkout = ({ cart = [], clearCart }) => {
 
     // Try posting to backend API first
     try {
-      const response = await fetch("http://localhost:5000/orders", {
+      const response = await fetch(`${API_BASE_URL}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),

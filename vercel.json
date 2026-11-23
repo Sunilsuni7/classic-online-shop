@@ -1,9 +1,25 @@
 {
-  "buildCommand": "cd phase4/frontend && npm install && npm run build",
-  "outputDirectory": "phase4/frontend/dist",
+  "buildCommand": "node scripts/build-all.js",
+  "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/phase1",
+      "destination": "/phase1/index.html"
+    },
+    {
+      "source": "/phase2",
+      "destination": "/phase2/index.html"
+    },
+    {
+      "source": "/phase3",
+      "destination": "/phase3/index.html"
+    },
+    {
+      "source": "/((?!api|phase1|phase2|phase3).*)",
       "destination": "/index.html"
     }
   ]
